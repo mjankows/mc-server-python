@@ -1,8 +1,9 @@
 import tkinter as tk
 import datetime
 import _thread
+from gpiozero import CPUTemperature
 from tkinter import ttk
-from os import system
+from subprocess import call
 from json import loads
 from time import sleep
 
@@ -11,22 +12,27 @@ FRAME = ttk.Frame(SERVER_GUI, padding=500)
 FRAME.grid()
 SERVER_UP = False
 
+def temperature_loop():
+    while True:
+        sleep(1)
+
+
 def startup_shutdown_loop():
     global SERVER_UP
     while True:
-        sleep(1)
+        sleep(60)
         if datetime.datetime.now().hour < 12  and SERVER_UP:
             SERVER_UP = False
-            system("stop")
+            call("stop &")
         elif datetime.datetime.now().hour >=12 and not SERVER_UP:
             SERVER_UP = True
-            system("java -Xmx1024M -Xmn1024M -jar server.jar nogui")
+            call("java -Xmx2048M -Xmn2048M -jar server.jar nogui &")
         else:
             print(datetime.datetime.now())
 
 
 def add_command_button(text, command, col, row):
-    ttk.Button(FRAME, text = text, command = lambda: system(command)).grid(
+    ttk.Button(FRAME, text = text, command = lambda: call(command)).grid(
         column=col, row=row)
         
 def window_setup(commands):
@@ -43,6 +49,7 @@ def window_setup(commands):
 
 
 def main():
+    call("vcgencmd measure_temp &")
     with open('commands') as f:
         data = f.read()
     print(data)

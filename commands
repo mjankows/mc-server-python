@@ -1,5 +1,5 @@
 {
-	"0": {"Launch Server": "java -Xmx1024M -Xmn1024M -jar server.jar nogui",
-	"Shutdown Server": "stop"},
-	"1": {"hi": "echo hello"}
+	"0": {"Launch Server": "java -Xmx1024M -Xmn1024M -jar server.jar nogui &",
+	"Shutdown Server": "stop &"},
+	"1": {"hi": "echo 'hello'"}
 }
